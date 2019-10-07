@@ -1,4 +1,4 @@
-
+# here various libraries are imported , we have to download these libraries to use them otherwise it wont work   
 import pyttsx3
 import datetime
 import speech_recognition as sr
@@ -11,10 +11,12 @@ engine = pyttsx3.init('sapi5')
 voices = engine.getProperty('voices')
 engine.setProperty('voice',voices[1].id)
 
+#here a function is made for user input speech
 def speak(audio):
     engine.say(audio)
     engine.runAndWait()
 
+#this is used for program speech output 
 def wishme():
     hour = int(datetime.datetime.now().hour)
 
