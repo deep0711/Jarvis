@@ -1,15 +1,16 @@
-
 import pyttsx3
 import datetime
 import speech_recognition as sr
 import wikipedia
 import os
 import webbrowser
+import sys
 
 
 engine = pyttsx3.init('sapi5')
 voices = engine.getProperty('voices')
 engine.setProperty('voice',voices[1].id)
+engine.setProperty('rate', 185)
 
 def speak(audio):
     engine.say(audio)
@@ -27,7 +28,7 @@ def wishme():
     else:
         speak("Good Evening")
 
-    speak("HELLO I AM JARVIS HOW MAY I HELP YOU")
+    speak("Hey Buddy Whats Up How can I help you.")
 
 def takecommand():
     r = sr.Recognizer()
@@ -43,9 +44,7 @@ def takecommand():
         print("Recognizing.....")
         query = r.recognize_google(audio, language = 'en-in')
         print("User said:",query)
-
     except Exception as e:
-        
         print("SAY THAT AGAIN PLEASE...")
         return "None"
     
@@ -55,25 +54,37 @@ if __name__ == "__main__":
     wishme()
     while True:
         query=takecommand().lower()
+        #print(query);
 
-        if 'wikipedia' in query:
-            speak("Searching Wikipedia......")
+        if ( query.find('hello')!=-1 or query.find('hey')!=-1 ) :
+            speak('Hey Buudy How can I help you')
+
+        elif ( query.find('time')!=-1) :
+            time=str(datetime.datetime.now().time())
+            time=time.replace(":"," ")
+            time=time[0:5]
+            speak("The time is "+time)
+        
+        elif ( query.find('wikipedia')!=-1 or query.find('where')!=-1 or query.find('what')!=-1 )  :
             query = query.replace("wikipedia"," ")
+            query = query.replace("what"," ")
             results = wikipedia.summary(query,sentences=3)
-            speak("According to wikipedia.....")
             print(results)
             speak(results)
-
-        elif 'open youtube' in query:
-            webbrowser.open("youtube.com")
-
-        elif 'search' and 'youtube' in query:
-            webbrowser.open("youtube/query.com")
-
-        elif 'open google' in query:
-            webbrowser.open("google.com")
-
-        elif 'search' in query:
-            webbrowser.open("google/query.com")
+        
+        elif query.find('open youtube')!=-1:
+            webbrowser.get('windows-default').open('http://www.youtube.com')
+        
+        elif query.find('youtube')!=-1:
+            query=query.replace("youtube"," ")
+            webbrowser.get('windows-default').open('https://www.youtube.com/results?search_query='+query)
+        
+        elif query.find('open google')!=-1:
+            webbrowser.get('windows-default').open('http://www.google.com')
+        elif query.find('bye')!=-1:
+            speak('Bye Have a good Day Ahead')
+            sys.exit()    
+        else:
+            webbrowser.get('windows-default').open("https://www.google.com/search?q="+query)
             
         
